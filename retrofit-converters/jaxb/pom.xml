@@ -10,18 +10,18 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <artifactId>converter-java8</artifactId>
-  <name>Converter: Java 8</name>
-
-  <properties>
-    <java.version>1.8</java.version>
-  </properties>
+  <artifactId>converter-jaxb</artifactId>
+  <name>Converter: JAXB</name>
 
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>retrofit</artifactId>
       <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.xml.bind</groupId>
+      <artifactId>jaxb-api</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.code.findbugs</groupId>
@@ -49,24 +49,12 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>animal-sniffer-maven-plugin</artifactId>
-        <version>${animal.sniffer.version}</version>
-        <configuration>
-          <signature>
-            <groupId>org.kaazing.mojo.signature</groupId>
-            <artifactId>java18</artifactId>
-            <version>1.0</version>
-          </signature>
-        </configuration>
-      </plugin>
-      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
         <configuration>
           <archive>
             <manifestEntries>
-              <Automatic-Module-Name>retrofit2.converter.java8</Automatic-Module-Name>
+              <Automatic-Module-Name>retrofit2.converter.jaxb</Automatic-Module-Name>
             </manifestEntries>
           </archive>
         </configuration>
