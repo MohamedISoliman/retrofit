@@ -33,7 +33,6 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import okio.Buffer;
-import org.junit.Ignore;
 import org.junit.Test;
 import retrofit2.helpers.NullObjectConverterFactory;
 import retrofit2.helpers.ToStringConverterFactory;
@@ -83,7 +82,6 @@ public final class RequestBuilderTest {
     assertThat(request.body()).isNull();
   }
 
-  @Ignore("https://github.com/square/okhttp/issues/229")
   @Test public void customMethodWithBody() {
     class Example {
       @HTTP(method = "CUSTOM2", path = "/foo", hasBody = true)
@@ -1019,7 +1017,8 @@ public final class RequestBuilderTest {
     Request request = buildRequest(Example.class, "pong?", "kat?");
     assertThat(request.method()).isEqualTo("GET");
     assertThat(request.headers().size()).isZero();
-    assertThat(request.url().toString()).isEqualTo("http://example.com/foo/bar/pong%3F/?kit=kat?");
+    assertThat(request.url().toString())
+        .isEqualTo("http://example.com/foo/bar/pong%3F/?kit=kat%3F");
     assertThat(request.body()).isNull();
   }
 
@@ -1462,7 +1461,7 @@ public final class RequestBuilderTest {
     Request request = buildRequest(Example.class, "foo/bar/", "hey!");
     assertThat(request.method()).isEqualTo("GET");
     assertThat(request.headers().size()).isZero();
-    assertThat(request.url().toString()).isEqualTo("http://example.com/foo/bar/?hey=hey!");
+    assertThat(request.url().toString()).isEqualTo("http://example.com/foo/bar/?hey=hey%21");
   }
 
   @Test public void postWithUrl() {
@@ -1509,7 +1508,6 @@ public final class RequestBuilderTest {
     assertBody(request.body(), "");
   }
 
-  @Ignore("https://github.com/square/okhttp/issues/229")
   @Test public void customMethodEmptyBody() {
     class Example {
       @HTTP(method = "CUSTOM", path = "/foo/bar/", hasBody = true) //
@@ -2387,6 +2385,28 @@ public final class RequestBuilderTest {
     assertThat(headers.size()).isEqualTo(2);
     assertThat(headers.get("ping")).isEqualTo("pong");
     assertThat(headers.get("kit")).isEqualTo("kat");
+    assertThat(request.url().toString()).isEqualTo("http://example.com/foo/bar/");
+    assertThat(request.body()).isNull();
+  }
+
+  @Test public void headersDoNotOverwriteEachOther() {
+    class Example {
+      @GET("/foo/bar/")
+      @Headers({
+          "ping: pong",
+          "kit: kat",
+          "kit: -kat",
+      })
+      Call<ResponseBody> method() {
+        return null;
+      }
+    }
+    Request request = buildRequest(Example.class);
+    assertThat(request.method()).isEqualTo("GET");
+    okhttp3.Headers headers = request.headers();
+    assertThat(headers.size()).isEqualTo(3);
+    assertThat(headers.get("ping")).isEqualTo("pong");
+    assertThat(headers.values("kit")).containsOnly("kat", "-kat");
     assertThat(request.url().toString()).isEqualTo("http://example.com/foo/bar/");
     assertThat(request.body()).isNull();
   }

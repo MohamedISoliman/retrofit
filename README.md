@@ -14,12 +14,12 @@ Download [the latest JAR][2] or grab via Maven:
 <dependency>
   <groupId>com.squareup.retrofit2</groupId>
   <artifactId>retrofit</artifactId>
-  <version>2.3.0</version>
+  <version>2.4.0</version>
 </dependency>
 ```
 or Gradle:
 ```groovy
-compile 'com.squareup.retrofit2:retrofit:2.3.0'
+implementation 'com.squareup.retrofit2:retrofit:2.4.0'
 ```
 
 Snapshots of the development version are available in [Sonatype's `snapshots` repository][snap].
@@ -42,6 +42,8 @@ If you are using ProGuard you need to add the following options:
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
 ```
 
+You might also need rules for OkHttp and Okio which are dependencies.
+
 
 License
 =======
@@ -61,6 +63,6 @@ License
     limitations under the License.
 
 
- [1]: http://square.github.io/retrofit/
+ [1]: https://square.github.io/retrofit/
  [2]: https://search.maven.org/remote_content?g=com.squareup.retrofit2&a=retrofit&v=LATEST
  [snap]: https://oss.sonatype.org/content/repositories/snapshots/
